@@ -141,7 +141,8 @@ function! s:Repo.hg_command(...) dict abort
   let cmd = 'cd ' . self.root_dir
   " HGPLAIN is an environment variable that's supposed to override any settings
   " that will mess with the hg command
-  let cmd .= ' && HGPLAIN=1 ' . g:mercenary_hg_executable
+  " let cmd .= ' && HGPLAIN=1 ' . g:mercenary_hg_executable "Don't use HGPLAIN
+  let cmd .= ' && ' . g:mercenary_hg_executable
   let cmd .= ' ' . join(map(copy(a:000), 's:shellesc(v:val)'), ' ')
   return cmd
 endfunction
@@ -225,7 +226,7 @@ function! s:Blame() abort
   "
   " TODO(jlfwong): Considering switching this to use mercenary://blame
 
-  let hg_args = ['blame', '--changeset', '--number', '--user', '--date', '-q']
+  let hg_args = ['blame', '-p', '--changeset', '--user', '--date', '-q'] " Show phabdiff"
   let hg_args += ['--', s:buffer().path()]
   let hg_blame_command = call(s:repo().hg_command, hg_args, s:repo())
 
